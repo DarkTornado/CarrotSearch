@@ -1,6 +1,7 @@
 package com.darktornado.carrotsearch;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -8,10 +9,6 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 public class MainActivity extends Activity {
 
@@ -37,9 +34,9 @@ public class MainActivity extends Activity {
         Button search = new Button(this);
         search.setText("검색");
         search.setOnClickListener((v) -> {
-            String location = txt2.getText().toString();
+            String region = txt2.getText().toString();
             String word = txt4.getText().toString();
-            final String input = (location + "%20" + word).replace(" ", "%20");
+            final String input = (region + " " + word);
             new Thread(() -> searchStuff(input)).start();
         });
         layout.addView(search);
@@ -52,21 +49,9 @@ public class MainActivity extends Activity {
 
     private void searchStuff(String input) {
         try {
-            Elements data = Jsoup.connect("https://www.daangn.com/search/" + input).get()
-                    .select("div.articles-wrap").get(0).select("article");
-            if (data.size() == 0) {
-                toast("검색 결과가 없어요 :(");
-                return;
-            }
-            StringBuilder result = new StringBuilder();
-            for (int n = 0; n < data.size(); n++) {
-                Element datum = data.get(n);
-                String title = datum.select("span.article-title").text();
-                String location = datum.select("p.article-region-name").text();
-                String price = datum.select("p.article-price ").text();
-                result.append(title).append("\n").append(location).append("\n").append(price).append("\n\n");
-            }
-            toast(result.toString());
+            Intent intent = new Intent(this, ListActivity.class);
+            intent.putExtra("input", input);
+            startActivity(intent);
         } catch (Exception e) {
             toast(e.toString());
         }
