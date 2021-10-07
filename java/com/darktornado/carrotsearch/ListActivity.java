@@ -2,8 +2,11 @@ package com.darktornado.carrotsearch;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -20,7 +23,7 @@ public class ListActivity extends Activity {
             getActionBar().setTitle(input);
 
             CarrotParser parser = new CarrotParser(input);
-            Item[] items = parser.parse();
+            final Item[] items = parser.parse();
 
             LinearLayout layout = new LinearLayout(this);
             layout.setOrientation(1);
@@ -29,7 +32,13 @@ public class ListActivity extends Activity {
             adapter.setIconSize(0);
             adapter.setItems(items);
             list.setAdapter(adapter);
+            list.setOnItemClickListener((parent, view, pos, id) -> {
+                Uri uri = Uri.parse("https://www.daangn.com/"+items[pos].url);
+                Intent intent1 = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent1);
+            });
             layout.addView(list);
+
             int pad = dip2px(20);
             list.setPadding(pad, pad, pad, pad);
             setContentView(layout);
