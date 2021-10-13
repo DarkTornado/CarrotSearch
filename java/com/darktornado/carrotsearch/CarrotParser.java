@@ -12,6 +12,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 
 public class CarrotParser {
     private final String input;
@@ -21,11 +22,11 @@ public class CarrotParser {
         this.input = input;
     }
 
-    public Item[] parse() throws IOException {
+    public ArrayList<Item> parse() throws IOException {
         Elements data = Jsoup.connect("https://www.daangn.com/search/" + input.replace(" ", "%20") + "/more/flea_market?page=" + page).get()
                 .select("article");
         if (data.size() == 0) return null;
-        Item[] result = new Item[data.size()];
+        ArrayList<Item> result = new ArrayList<>();
         for (int n = 0; n < data.size(); n++) {
             Element datum = data.get(n);
             String title = datum.select("span.article-title").text();
@@ -33,7 +34,7 @@ public class CarrotParser {
             String price = datum.select("p.article-price ").text();
             String image = datum.select("img").get(0).attr("src");
             String url = datum.select("a").get(0).attr("src");
-            result[n] = new Item(title, price + " / " + region, url, new BitmapDrawable(getImageFromWeb(image)));
+            result.add(new Item(title, price + " / " + region, url, new BitmapDrawable(getImageFromWeb(image))));
         }
         page++;
         return result;

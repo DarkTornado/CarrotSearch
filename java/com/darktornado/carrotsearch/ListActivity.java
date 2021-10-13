@@ -5,11 +5,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 public class ListActivity extends Activity {
 
@@ -23,7 +23,7 @@ public class ListActivity extends Activity {
             getActionBar().setTitle(input);
 
             CarrotParser parser = new CarrotParser(input);
-            final Item[] items = parser.parse();
+            final ArrayList<Item> items = parser.parse();
 
             LinearLayout layout = new LinearLayout(this);
             layout.setOrientation(1);
@@ -33,7 +33,7 @@ public class ListActivity extends Activity {
             adapter.setItems(items);
             list.setAdapter(adapter);
             list.setOnItemClickListener((parent, view, pos, id) -> {
-                Uri uri = Uri.parse("https://www.daangn.com/"+items[pos].url);
+                Uri uri = Uri.parse("https://www.daangn.com/" + items.get(pos).url);
                 Intent intent1 = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent1);
             });
