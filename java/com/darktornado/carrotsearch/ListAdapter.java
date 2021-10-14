@@ -69,6 +69,14 @@ public class ListAdapter extends BaseAdapter {
         this.list.addAll(list);
     }
 
+    public void addItems(ArrayList<Item> list) {
+        this.list.addAll(list);
+    }
+
+    public void removeItem(int index) {
+        this.list.remove(index);
+    }
+
     public void addItem(Item item) {
         this.list.add(item);
     }

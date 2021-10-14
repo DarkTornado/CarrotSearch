@@ -24,18 +24,34 @@ public class ListActivity extends Activity {
 
             CarrotParser parser = new CarrotParser(input);
             final ArrayList<Item> items = parser.parse();
+            items.add(new Item("더보기", "", "", null));
 
             LinearLayout layout = new LinearLayout(this);
             layout.setOrientation(1);
             ListView list = new ListView(this);
-            ListAdapter adapter = new ListAdapter();
+            final ListAdapter adapter = new ListAdapter();
             adapter.setIconSize(0);
             adapter.setItems(items);
             list.setAdapter(adapter);
             list.setOnItemClickListener((parent, view, pos, id) -> {
-                Uri uri = Uri.parse("https://www.daangn.com/" + items.get(pos).url);
-                Intent intent1 = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent1);
+                if (pos == items.size() - 1) {
+                    try {
+                        ArrayList<Item> data = parser.parse();
+                        data.add(new Item("더보기", "", "", null));
+                        adapter.removeItem(items.size() - 1);
+                        items.remove(items.size() - 1);
+                        items.addAll(data);
+                        adapter.addItems(data);
+                        adapter.notifyDataSetChanged();
+                        toast("로드됨");
+                    } catch (Exception e) {
+                        toast(e.toString());
+                    }
+                } else {
+                    Uri uri = Uri.parse("https://www.daangn.com/" + items.get(pos).url);
+                    Intent intent1 = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(intent1);
+                }
             });
             layout.addView(list);
 
