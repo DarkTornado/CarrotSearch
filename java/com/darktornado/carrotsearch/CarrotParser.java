@@ -23,7 +23,8 @@ public class CarrotParser {
     }
 
     public ArrayList<Item> parse() throws IOException {
-        Elements data = Jsoup.connect("https://www.daangn.com/search/" + input.replace(" ", "%20") + "/more/flea_market?page=" + page).get()
+        String _url = "https://www.daangn.com/search/" + input.replace(" ", "%20") + "/more/flea_market?page=" + page;
+        Elements data = Jsoup.connect(_url).get()
                 .select("article");
         if (data.size() == 0) return null;
         ArrayList<Item> result = new ArrayList<>();
