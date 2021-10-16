@@ -15,7 +15,7 @@ import java.util.Arrays;
 
 public class ListAdapter extends BaseAdapter {
 
-    private ArrayList<Item> list = new ArrayList<>();
+    private final ArrayList<Item> list = new ArrayList<>();
     private int size = -1;
 
     @Override

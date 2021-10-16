@@ -34,7 +34,7 @@ public class CarrotParser {
             String region = datum.select("p.article-region-name").text();
             String price = datum.select("p.article-price ").text();
             String image = datum.select("img").get(0).attr("src");
-            String url = datum.select("a").get(0).attr("src");
+            String url = datum.select("a").get(0).attr("href");
             result.add(new Item(title, price + " / " + region, url, new BitmapDrawable(getImageFromWeb(image))));
         }
         page++;
