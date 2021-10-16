@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -24,33 +25,40 @@ public class ListActivity extends Activity {
 
             CarrotParser parser = new CarrotParser(input);
             final ArrayList<Item> items = parser.parse();
-            items.add(new Item("더보기", "", "", null));
 
+            final ListAdapter adapter = new ListAdapter();
             LinearLayout layout = new LinearLayout(this);
             layout.setOrientation(1);
             ListView list = new ListView(this);
-            final ListAdapter adapter = new ListAdapter();
             adapter.setIconSize(0);
             adapter.setItems(items);
             list.setAdapter(adapter);
             list.setOnItemClickListener((parent, view, pos, id) -> {
-                if (pos == items.size() - 1) {
+                Uri uri = Uri.parse("https://www.daangn.com/" + items.get(pos).url);
+                Intent intent1 = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent1);
+            });
+            final boolean[] flag = {false};
+            list.setOnScrollListener(new AbsListView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
                     try {
-                        ArrayList<Item> data = parser.parse();
-                        data.add(new Item("더보기", "", "", null));
-                        adapter.removeItem(items.size() - 1);
-                        items.remove(items.size() - 1);
-                        items.addAll(data);
-                        adapter.addItems(data);
-                        adapter.notifyDataSetChanged();
-                        toast("로드됨");
+                        if (flag[0]) return;
+                        if (!list.canScrollVertically(1)) {
+                            flag[0] = true;
+                            ArrayList<Item> data = parser.parse();
+                            items.addAll(data);
+                            adapter.addItems(data);
+                            adapter.notifyDataSetChanged();
+                        }
+                        flag[0] = false;
                     } catch (Exception e) {
                         toast(e.toString());
                     }
-                } else {
-                    Uri uri = Uri.parse("https://www.daangn.com/" + items.get(pos).url);
-                    Intent intent1 = new Intent(Intent.ACTION_VIEW, uri);
-                    startActivity(intent1);
+                }
+
+                @Override
+                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 }
             });
             layout.addView(list);
