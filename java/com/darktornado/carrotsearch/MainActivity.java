@@ -90,6 +90,8 @@ public class MainActivity extends Activity {
             });
             layout.addView(sws[n]);
         }
+        int pad = dip2px(16);
+        layout.setPadding(pad, pad, pad, pad);
         ScrollView scroll = new ScrollView(this);
         scroll.addView(layout);
         dialog.setView(scroll);
