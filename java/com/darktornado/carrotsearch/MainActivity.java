@@ -37,7 +37,7 @@ public class MainActivity extends Activity {
             String region = txt2.getText().toString();
             String word = txt4.getText().toString();
             final String input = (region + " " + word);
-            new Thread(() -> searchStuff(input)).start();
+            searchStuff(input);
         });
         layout.addView(search);
         int pad = dip2px(16);
@@ -48,13 +48,9 @@ public class MainActivity extends Activity {
     }
 
     private void searchStuff(String input) {
-        try {
-            Intent intent = new Intent(this, ListActivity.class);
-            intent.putExtra("input", input);
-            startActivity(intent);
-        } catch (Exception e) {
-            toast(e.toString());
-        }
+        Intent intent = new Intent(this, ListActivity.class);
+        intent.putExtra("input", input);
+        startActivity(intent);
     }
 
     public int dip2px(int dips) {
